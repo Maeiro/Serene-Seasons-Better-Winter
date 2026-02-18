@@ -1,6 +1,7 @@
 package com.maeiro.serenebetterwinter;
 
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -18,6 +19,7 @@ public final class LeafTargeting {
     private static final Set<String> CONIFER_HINTS = Set.of(
         "spruce", "pine", "fir", "cypress", "juniper", "cedar", "sequoia", "redwood", "hemlock", "conifer"
     );
+    private static final ConcurrentHashMap<Block, Boolean> FALLBACK_HIDE_CACHE = new ConcurrentHashMap<>();
 
     private LeafTargeting() {
     }
@@ -50,6 +52,11 @@ public final class LeafTargeting {
             return true;
         }
 
+        Boolean cached = FALLBACK_HIDE_CACHE.get(block);
+        if (cached != null) {
+            return cached;
+        }
+
         ResourceLocation key = ForgeRegistries.BLOCKS.getKey(block);
         if (key == null) {
             return false;
@@ -58,6 +65,7 @@ public final class LeafTargeting {
         String path = key.getPath();
         for (String hint : CONIFER_HINTS) {
             if (path.contains(hint)) {
+                FALLBACK_HIDE_CACHE.put(block, false);
                 return false;
             }
         }
@@ -65,9 +73,12 @@ public final class LeafTargeting {
         String namespace = key.getNamespace();
         if ((namespace.equals("dynamic_trees") || namespace.startsWith("dynamictrees") || namespace.startsWith("dt"))
             && path.contains("leaves")) {
+            FALLBACK_HIDE_CACHE.put(block, true);
             return true;
         }
 
-        return path.contains("leaves") || state.is(BlockTags.LEAVES) || block instanceof LeavesBlock;
+        boolean fallback = path.contains("leaves") || state.is(BlockTags.LEAVES) || block instanceof LeavesBlock;
+        FALLBACK_HIDE_CACHE.put(block, fallback);
+        return fallback;
     }
 }

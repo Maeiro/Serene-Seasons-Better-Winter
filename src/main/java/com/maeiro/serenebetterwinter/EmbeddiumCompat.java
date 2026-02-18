@@ -3,6 +3,9 @@ package com.maeiro.serenebetterwinter;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Blocks;
@@ -13,6 +16,7 @@ public final class EmbeddiumCompat {
     private static final String EMBEDDIUM_MOD_ID = "embeddium";
     private static boolean registered = false;
     private static boolean registrationFailedLogged = false;
+    private static final Map<Class<?>, ContextAccessors> ACCESSORS_CACHE = new ConcurrentHashMap<>();
 
     private EmbeddiumCompat() {
     }
@@ -48,17 +52,18 @@ public final class EmbeddiumCompat {
                         return passResult;
                     }
 
-                    Method stateMethod = context.getClass().getMethod("state");
-                    Method posMethod = context.getClass().getMethod("pos");
-                    Method localSliceMethod = context.getClass().getMethod("localSlice");
+                    ContextAccessors accessors = ACCESSORS_CACHE.computeIfAbsent(context.getClass(), ContextAccessors::new);
+                    if (!accessors.valid()) {
+                        return passResult;
+                    }
 
-                    BlockState state = (BlockState) stateMethod.invoke(context);
+                    BlockState state = (BlockState) accessors.state().invoke(context);
                     if (state == null || !state.is(Blocks.SNOW)) {
                         return passResult;
                     }
 
-                    BlockPos pos = (BlockPos) posMethod.invoke(context);
-                    BlockAndTintGetter level = (BlockAndTintGetter) localSliceMethod.invoke(context);
+                    BlockPos pos = (BlockPos) accessors.pos().invoke(context);
+                    BlockAndTintGetter level = (BlockAndTintGetter) accessors.localSlice().invoke(context);
                     if (SnowRenderRules.shouldHideSnowLayerAboveHiddenLeaves(level, pos, state)) {
                         return overrideResult;
                     }
@@ -74,8 +79,10 @@ public final class EmbeddiumCompat {
                         return null;
                     }
                     Object listObj = args[0];
-                    if (listObj != null) {
-                        listObj.getClass().getMethod("add", Object.class).invoke(listObj, rendererProxy);
+                    if (listObj instanceof List<?> list) {
+                        @SuppressWarnings("unchecked")
+                        List<Object> raw = (List<Object>) list;
+                        raw.add(rendererProxy);
                     }
                     return null;
                 }
@@ -90,6 +97,24 @@ public final class EmbeddiumCompat {
                 registrationFailedLogged = true;
                 SereneBetterWinterMod.LOGGER.warn("[{}] Failed to register Embeddium compatibility filter.", SereneBetterWinterMod.MOD_ID, t);
             }
+        }
+    }
+
+    private record ContextAccessors(Method state, Method pos, Method localSlice) {
+        private ContextAccessors(Class<?> contextClass) {
+            this(find(contextClass, "state"), find(contextClass, "pos"), find(contextClass, "localSlice"));
+        }
+
+        private static Method find(Class<?> type, String name) {
+            try {
+                return type.getMethod(name);
+            } catch (Exception ignored) {
+                return null;
+            }
+        }
+
+        private boolean valid() {
+            return state != null && pos != null && localSlice != null;
         }
     }
 }
