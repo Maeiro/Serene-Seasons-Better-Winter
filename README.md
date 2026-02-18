@@ -1,53 +1,86 @@
 # Serene Seasons Better Winter
 
-Forge 1.20.1 addon that hides deciduous leaves in late autumn and winter.
+Forge `1.20.1` addon focused on seasonal immersion:
+deciduous leaves disappear in late autumn/winter, while conifer and jungle leaves stay visible.
 
-## What It Does
+## Highlights
 
-- Works automatically after installing the mod.
-- Adds a simple client config toggle for visuals.
-- Targets deciduous leaves only.
-- Keeps conifer and jungle leaves visible.
-- Supports Serene Seasons season detection and Dynamic Trees fallback matching.
-- Removes floating snow layer above hidden leaves.
-- Optional server-side pass-through on hidden leaves/snow for better gameplay feel.
+- Automatic behavior after install (no in-game activation flow).
+- Works with Serene Seasons season state.
+- Dynamic Trees-compatible leaf detection.
+- Removes floating `minecraft:snow` layer above hidden leaves.
+- Optional server gameplay mode:
+  - pass through hidden leaves/snow collision;
+  - remove light blocking from hidden blocks.
 
-## Forge Version Policy
+## Compatibility
 
-- Default dev/build target: `47.4.10`.
-- Runtime compatibility declared in `mods.toml`: `[47.4.10,48)`.
+- Minecraft: `1.20.1`
+- Forge runtime range: `[47.4.10,48)`
+- Primary dev target: `47.4.10`
+- Optional integrations:
+  - `sereneseasons`
+  - `dynamic_trees`
+  - Embeddium (specialized renderer/light handling path)
 
-## Install
+## Installation
 
-1. Put the mod JAR in `mods/`.
-2. Put `resourcepack/SereneBetterWinter-Assets` in `resourcepacks/` and enable it.
-3. Start the game.
+1. Put the mod jar in your `mods/` folder.
+2. Copy `resourcepack/SereneBetterWinter-Assets` to `resourcepacks/`.
+3. Enable the resource pack in-game.
+4. Launch and play.
 
-## Config
+## Configuration
 
-- File: `config/serene_better_winter-client.toml`
-- Options:
-  - `enabled = true` (default)
-  - `hide_snow_above_hidden_leaves = true` (default)
+### Client
 
-If `enabled=false`, the mod does not hide any leaves.
+File: `config/serene_better_winter-client.toml`
 
-- File: `world/serverconfig/serene_better_winter-server.toml`
-- Options:
-  - `pass_through_hidden_blocks = true` (default)
-  - `remove_light_blocking_from_hidden_blocks = true` (default)
-  - `force_relight_on_season_change = true` (default)
+- `enabled = true`
+- `hide_snow_above_hidden_leaves = true`
 
-If `pass_through_hidden_blocks=true`, players/entities can pass through season-hidden leaves and snow layers hidden above those leaves.
+If `enabled = false`, the mod does not hide leaves or related snow visuals.
+
+### Server
+
+File: `world/serverconfig/serene_better_winter-server.toml`
+
+- `pass_through_hidden_blocks = true`
+- `remove_light_blocking_from_hidden_blocks = true`
+- `force_relight_on_season_change = true`
+
+`pass_through_hidden_blocks = true` allows entities to pass through hidden leaves and hidden snow layers above them.
+
+## Build
+
+```powershell
+.\gradlew.bat clean build
+```
+
+Artifact output:
+
+- `build/libs/serene_better_winter-<version>.jar`
+
+## Publishing Notes
+
+- Mod metadata is declared in `src/main/resources/META-INF/mods.toml`.
+- Mixin config is declared in both:
+  - `src/main/resources/serene_better_winter.mixins.json`
+  - jar manifest (`MixinConfigs` attribute).
+- Project links:
+  - Source: <https://github.com/Maeiro/Serene-Seasons-Better-Winter>
+  - Issues: <https://github.com/Maeiro/Serene-Seasons-Better-Winter/issues>
 
 ## License
 
-MIT
+MIT (`LICENSE`)
 
 ## TODO
 
 - Performance tuning (server relight path):
-  - Make relight tuning configurable in `server.toml` (chunk cap and vertical scan window).
-  - Reduce `RELIGHT_CHUNK_LIMIT` (e.g. `900 -> 400/500`).
-  - Narrow relight vertical scan window (`topY - 20 .. topY + 4`).
-  - Add server-side cache for `CollisionRules.shouldHideLeafLike` by `Block`.
+  - make relight tuning configurable in `server.toml` (chunk cap and vertical scan window);
+  - reduce `RELIGHT_CHUNK_LIMIT` (e.g. `900 -> 400/500`);
+  - narrow relight vertical scan window (`topY - 20 .. topY + 4`);
+  - add server-side cache for `CollisionRules.shouldHideLeafLike` by `Block`.
+- Compatibility/behavior:
+  - fix `remove_light_blocking_from_hidden_blocks` in non-Embeddium environments (vanilla/Forge renderer path).
