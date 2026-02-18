@@ -11,6 +11,7 @@ public final class SereneBetterWinterMod {
     public static final String MOD_ID = "serene_better_winter";
     public static final Logger LOGGER = LogUtils.getLogger();
 
+    @SuppressWarnings("removal")
     public SereneBetterWinterMod() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
         LOGGER.info("[{}] Loaded. Client config enabled default={}", MOD_ID, ClientConfig.ENABLED.getDefault());

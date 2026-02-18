@@ -3,7 +3,6 @@ package com.maeiro.serenebetterwinter;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Blocks;
@@ -30,8 +29,8 @@ public final class EmbeddiumCompat {
             Class<?> rendererInterface = Class.forName("org.embeddedt.embeddium.api.BlockRendererRegistry$Renderer", false, cl);
             Class<?> renderResultEnum = Class.forName("org.embeddedt.embeddium.api.BlockRendererRegistry$RenderResult", false, cl);
 
-            Object passResult = Enum.valueOf((Class<Enum>) renderResultEnum.asSubclass(Enum.class), "PASS");
-            Object overrideResult = Enum.valueOf((Class<Enum>) renderResultEnum.asSubclass(Enum.class), "OVERRIDE");
+            Object passResult = renderResultEnum.getField("PASS").get(null);
+            Object overrideResult = renderResultEnum.getField("OVERRIDE").get(null);
 
             Object rendererProxy = Proxy.newProxyInstance(cl, new Class<?>[]{rendererInterface}, new InvocationHandler() {
                 @Override
@@ -75,8 +74,8 @@ public final class EmbeddiumCompat {
                         return null;
                     }
                     Object listObj = args[0];
-                    if (listObj instanceof List<?> list) {
-                        ((List<Object>) list).add(rendererProxy);
+                    if (listObj != null) {
+                        listObj.getClass().getMethod("add", Object.class).invoke(listObj, rendererProxy);
                     }
                     return null;
                 }
