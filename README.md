@@ -18,8 +18,9 @@ deciduous leaves disappear in late autumn/winter, while conifer and jungle leave
 - Minecraft: `1.20.1`
 - Forge runtime range: `[47.4.10,48)`
 - Primary dev target: `47.4.10`
-- Optional integrations:
+- Required integration:
   - `sereneseasons`
+- Optional integrations:
   - `dynamic_trees`
   - Embeddium (specialized renderer/light handling path)
 
