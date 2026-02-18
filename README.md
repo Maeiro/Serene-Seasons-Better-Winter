@@ -7,7 +7,7 @@ Forge 1.20.1 addon that hides deciduous leaves in late autumn and winter.
 - Works automatically after installing the mod.
 - Adds a single client config option: `enabled=true/false`.
 - Targets deciduous leaves only.
-- Keeps conifer leaves visible.
+- Keeps conifer and jungle leaves visible.
 - Supports Serene Seasons season detection and Dynamic Trees fallback matching.
 
 ## Forge Version Policy

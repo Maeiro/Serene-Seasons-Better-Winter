@@ -19,6 +19,9 @@ public final class LeafTargeting {
     private static final Set<String> CONIFER_HINTS = Set.of(
         "spruce", "pine", "fir", "cypress", "juniper", "cedar", "sequoia", "redwood", "hemlock", "conifer"
     );
+    private static final Set<String> HOT_BIOME_HINTS = Set.of(
+        "jungle"
+    );
     private static final ConcurrentHashMap<Block, Boolean> FALLBACK_HIDE_CACHE = new ConcurrentHashMap<>();
 
     private LeafTargeting() {
@@ -45,6 +48,17 @@ public final class LeafTargeting {
             return false;
         }
 
+        ResourceLocation key = ForgeRegistries.BLOCKS.getKey(block);
+        if (key != null) {
+            String path = key.getPath();
+            for (String hint : HOT_BIOME_HINTS) {
+                if (path.contains(hint)) {
+                    FALLBACK_HIDE_CACHE.put(block, false);
+                    return false;
+                }
+            }
+        }
+
         if (state.is(CONIFER_TAG)) {
             return false;
         }
@@ -57,7 +71,6 @@ public final class LeafTargeting {
             return cached;
         }
 
-        ResourceLocation key = ForgeRegistries.BLOCKS.getKey(block);
         if (key == null) {
             return false;
         }

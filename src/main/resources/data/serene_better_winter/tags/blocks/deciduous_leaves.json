@@ -3,7 +3,6 @@
   "values": [
     "minecraft:oak_leaves",
     "minecraft:birch_leaves",
-    "minecraft:jungle_leaves",
     "minecraft:acacia_leaves",
     "minecraft:dark_oak_leaves",
     "minecraft:mangrove_leaves",
@@ -16,10 +15,6 @@
     },
     {
       "id": "dynamic_trees:birch_leaves",
-      "required": false
-    },
-    {
-      "id": "dynamic_trees:jungle_leaves",
       "required": false
     },
     {
