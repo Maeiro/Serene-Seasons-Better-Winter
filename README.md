@@ -85,3 +85,4 @@ MIT (`LICENSE`)
   - add server-side cache for `CollisionRules.shouldHideLeafLike` by `Block`.
 - Compatibility/behavior:
   - fix `remove_light_blocking_from_hidden_blocks` in non-Embeddium environments (vanilla/Forge renderer path).
+  - improve light pass-through handling for hidden leaves in tall/very dense canopies (residual shadow still present even after ground-level leaf fixes).
