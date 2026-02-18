@@ -60,7 +60,7 @@ File: `world/serverconfig/serene_better_winter-server.toml`
 
 Artifact output:
 
-- `build/libs/serene_better_winter-<version>.jar`
+- `build/libs/serenebetterwinter-<modVersion>+forge-<mcVersion>.jar`
 
 ## Publishing Notes
 
