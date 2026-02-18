@@ -29,3 +29,7 @@ Forge 1.20.1 addon that hides deciduous leaves in late autumn and winter.
   - `hide_snow_above_hidden_leaves = true` (default)
 
 If `enabled=false`, the mod does not hide any leaves.
+
+## License
+
+MIT
