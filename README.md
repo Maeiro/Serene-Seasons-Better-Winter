@@ -85,4 +85,7 @@ MIT (`LICENSE`)
   - add server-side cache for `CollisionRules.shouldHideLeafLike` by `Block`.
 - Compatibility/behavior:
   - fix `remove_light_blocking_from_hidden_blocks` in non-Embeddium environments (vanilla/Forge renderer path).
-  - improve light pass-through handling for hidden leaves in tall/very dense canopies (residual shadow still present even after ground-level leaf fixes).
+  - improve light pass-through handling for hidden leaves in tall/very dense canopies when not using shaders (residual shadow still present even after ground-level leaf fixes).
+- Feature/config:
+  - add config to define which seasons/sub-seasons trigger leaf drop.
+  - add optional chat message when entering a leaf-drop season/sub-season (configurable).
