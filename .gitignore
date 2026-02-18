@@ -1,0 +1,32 @@
+# Gradle
+.gradle/
+build/
+out/
+
+# Runtime/dev directories
+run/
+logs/
+
+# Local tools/downloads
+tools/
+*.zip
+
+# IDE
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# Forge/MC generated
+accesstransform.log
+hs_err_pid*.log
+
+# Temporary
+*.tmp
+*.bak
