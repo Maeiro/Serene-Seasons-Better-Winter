@@ -43,3 +43,11 @@ If `pass_through_hidden_blocks=true`, players/entities can pass through season-h
 ## License
 
 MIT
+
+## TODO
+
+- Performance tuning (server relight path):
+  - Make relight tuning configurable in `server.toml` (chunk cap and vertical scan window).
+  - Reduce `RELIGHT_CHUNK_LIMIT` (e.g. `900 -> 400/500`).
+  - Narrow relight vertical scan window (`topY - 20 .. topY + 4`).
+  - Add server-side cache for `CollisionRules.shouldHideLeafLike` by `Block`.
