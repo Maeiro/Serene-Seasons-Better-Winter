@@ -5,9 +5,12 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "serene_better_winter.refmap.json",
   "mixins": [
-    "common.BlockStateCollisionMixin"
+    "common.BlockStateCollisionMixin",
+    "common.BlockStateLightingMixin"
   ],
   "client": [
+    "client.ClientBlockStateRenderShapeMixin",
+    "client.EmbeddiumLightDataAccessMixin",
     "client.ModelBlockRendererMixin",
     "client.VanillaModelBlockRendererMixin"
   ],

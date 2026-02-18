@@ -13,9 +13,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public final class CollisionRules {
     private static final TagKey<Block> DECIDUOUS_TAG =
-        BlockTags.create(new ResourceLocation(SereneBetterWinterMod.MOD_ID, "deciduous_leaves"));
+        BlockTags.create(ResourceLocation.tryBuild(SereneBetterWinterMod.MOD_ID, "deciduous_leaves"));
     private static final TagKey<Block> CONIFER_TAG =
-        BlockTags.create(new ResourceLocation(SereneBetterWinterMod.MOD_ID, "conifer_leaves"));
+        BlockTags.create(ResourceLocation.tryBuild(SereneBetterWinterMod.MOD_ID, "conifer_leaves"));
 
     private CollisionRules() {
     }
@@ -28,6 +28,36 @@ public final class CollisionRules {
             return false;
         }
         if (!SeasonStateResolver.isLeaflessSeason(level)) {
+            return false;
+        }
+
+        if (shouldHideLeafLike(state)) {
+            return true;
+        }
+
+        if (state.is(Blocks.SNOW)) {
+            BlockState below = level.getBlockState(pos.below());
+            return shouldHideLeafLike(below);
+        }
+
+        return false;
+    }
+
+    public static boolean shouldDisableLightBlocking(Level level, BlockPos pos, BlockState state) {
+        if (level == null || pos == null || state == null) {
+            return false;
+        }
+        return shouldDisableLightBlockingForSeasonState(level, pos, state, SeasonStateResolver.isLeaflessSeason(level));
+    }
+
+    public static boolean shouldDisableLightBlockingForSeasonState(Level level, BlockPos pos, BlockState state, boolean leaflessSeasonActive) {
+        if (level == null || pos == null || state == null) {
+            return false;
+        }
+        if (!ServerConfig.REMOVE_LIGHT_BLOCKING_FROM_HIDDEN_BLOCKS.get()) {
+            return false;
+        }
+        if (!leaflessSeasonActive) {
             return false;
         }
 
