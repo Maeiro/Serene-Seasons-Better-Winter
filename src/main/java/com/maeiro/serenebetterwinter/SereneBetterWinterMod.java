@@ -14,6 +14,7 @@ public final class SereneBetterWinterMod {
     @SuppressWarnings("removal")
     public SereneBetterWinterMod() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
         LOGGER.info("[{}] Loaded. Client config enabled default={}", MOD_ID, ClientConfig.ENABLED.getDefault());
     }
 }

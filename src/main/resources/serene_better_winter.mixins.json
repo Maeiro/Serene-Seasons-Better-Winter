@@ -4,7 +4,9 @@
   "package": "com.maeiro.serenebetterwinter.mixin",
   "compatibilityLevel": "JAVA_17",
   "refmap": "serene_better_winter.refmap.json",
-  "mixins": [],
+  "mixins": [
+    "common.BlockStateCollisionMixin"
+  ],
   "client": [
     "client.ModelBlockRendererMixin",
     "client.VanillaModelBlockRendererMixin"
