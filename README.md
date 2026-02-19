@@ -39,6 +39,7 @@ File: `config/serene_better_winter-client.toml`
 
 - `enabled = true`
 - `hide_snow_above_hidden_leaves = true`
+- `hide_outline_for_hidden_blocks = true`
 
 If `enabled = false`, the mod does not hide leaves or related snow visuals.
 
