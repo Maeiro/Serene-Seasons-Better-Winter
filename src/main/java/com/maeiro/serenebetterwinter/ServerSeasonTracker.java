@@ -22,7 +22,6 @@ import net.minecraftforge.fml.common.Mod;
 public final class ServerSeasonTracker {
     private static final Map<ResourceKey<Level>, Boolean> LAST_LEAFLESS_STATE = new HashMap<>();
     private static final Map<ResourceKey<Level>, Boolean> PENDING_RELIGHT = new HashMap<>();
-    private static final int RELIGHT_CHUNK_LIMIT = 900;
 
     private ServerSeasonTracker() {
     }
@@ -94,6 +93,10 @@ public final class ServerSeasonTracker {
             return false;
         }
 
+        int relightChunkLimit = ServerConfig.RELIGHT_CHUNK_LIMIT.get();
+        int relightScanBelowTop = ServerConfig.RELIGHT_SCAN_BELOW_TOP.get();
+        int relightScanAboveTop = ServerConfig.RELIGHT_SCAN_ABOVE_TOP.get();
+
         Set<Long> chunksToUpdate = new HashSet<>();
         int radius = Math.max(6, level.getServer().getPlayerList().getViewDistance() + 1);
 
@@ -103,15 +106,15 @@ public final class ServerSeasonTracker {
             for (int dz = -radius; dz <= radius; dz++) {
                 for (int dx = -radius; dx <= radius; dx++) {
                     chunksToUpdate.add(ChunkPos.asLong(centerX + dx, centerZ + dz));
-                    if (chunksToUpdate.size() >= RELIGHT_CHUNK_LIMIT) {
+                    if (chunksToUpdate.size() >= relightChunkLimit) {
                         break;
                     }
                 }
-                if (chunksToUpdate.size() >= RELIGHT_CHUNK_LIMIT) {
+                if (chunksToUpdate.size() >= relightChunkLimit) {
                     break;
                 }
             }
-            if (chunksToUpdate.size() >= RELIGHT_CHUNK_LIMIT) {
+            if (chunksToUpdate.size() >= relightChunkLimit) {
                 break;
             }
         }
@@ -131,8 +134,8 @@ public final class ServerSeasonTracker {
             for (int localZ = 0; localZ < 16; localZ++) {
                 for (int localX = 0; localX < 16; localX++) {
                     int topY = chunk.getHeight(Heightmap.Types.MOTION_BLOCKING, localX, localZ);
-                    int minY = Math.max(level.getMinBuildHeight(), topY - 20);
-                    int maxY = Math.min(level.getMaxBuildHeight() - 1, topY + 4);
+                    int minY = Math.max(level.getMinBuildHeight(), topY - relightScanBelowTop);
+                    int maxY = Math.min(level.getMaxBuildHeight() - 1, topY + relightScanAboveTop);
                     int worldX = (chunkX << 4) + localX;
                     int worldZ = (chunkZ << 4) + localZ;
 
@@ -152,11 +155,14 @@ public final class ServerSeasonTracker {
         }
 
         SereneBetterWinterMod.LOGGER.info(
-            "[{}] Forced relight in {} around {} chunk(s), checkBlock calls={}",
+            "[{}] Forced relight in {} around {} chunk(s), checkBlock calls={}, limit={}, belowTop={}, aboveTop={}",
             SereneBetterWinterMod.MOD_ID,
             level.dimension().location(),
             chunksToUpdate.size(),
-            relightChecks
+            relightChecks,
+            relightChunkLimit,
+            relightScanBelowTop,
+            relightScanAboveTop
         );
         return true;
     }

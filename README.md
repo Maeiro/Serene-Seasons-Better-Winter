@@ -49,6 +49,9 @@ File: `world/serverconfig/serene_better_winter-server.toml`
 - `pass_through_hidden_blocks = true`
 - `remove_light_blocking_from_hidden_blocks = true`
 - `force_relight_on_season_change = true`
+- `relight_chunk_limit = 900`
+- `relight_scan_below_top = 20`
+- `relight_scan_above_top = 4`
 
 `pass_through_hidden_blocks = true` allows entities to pass through hidden leaves and hidden snow layers above them.
 
@@ -79,10 +82,10 @@ MIT (`LICENSE`)
 ## TODO
 
 - Performance tuning (server relight path):
-  - make relight tuning configurable in `server.toml` (chunk cap and vertical scan window);
-  - reduce `RELIGHT_CHUNK_LIMIT` (e.g. `900 -> 400/500`);
-  - narrow relight vertical scan window (`topY - 20 .. topY + 4`);
-  - add server-side cache for `CollisionRules.shouldHideLeafLike` by `Block`.
+  - tune relight values per server profile using:
+    - `relight_chunk_limit`
+    - `relight_scan_below_top`
+    - `relight_scan_above_top`
 - Compatibility/behavior:
   - fix `remove_light_blocking_from_hidden_blocks` in non-Embeddium environments (vanilla/Forge renderer path).
   - improve light pass-through handling for hidden leaves in tall/very dense canopies when not using shaders (residual shadow still present even after ground-level leaf fixes).
