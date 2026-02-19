@@ -53,6 +53,71 @@ File: `world/serverconfig/serene_better_winter-server.toml`
 
 `pass_through_hidden_blocks = true` allows entities to pass through hidden leaves and hidden snow layers above them.
 
+## Leaf Customization Tutorial (Per Tree Type)
+
+You can control exactly which leaves become invisible using datapack block tags.
+
+Tags used by this mod:
+
+- `serene_better_winter:deciduous_leaves`:
+  - leaves in this tag are hidden during configured leafless seasons.
+- `serene_better_winter:conifer_leaves`:
+  - leaves in this tag are kept visible.
+
+Priority rule:
+
+- `conifer_leaves` wins over `deciduous_leaves` if a block is present in both.
+
+Step-by-step:
+
+1. Create a datapack folder in your world:
+`<world>/datapacks/my_leaf_rules/`
+2. Add `pack.mcmeta`:
+
+```json
+{
+  "pack": {
+    "pack_format": 15,
+    "description": "Custom leaf rules for Serene Seasons Better Winter"
+  }
+}
+```
+
+3. Create this path:
+`<world>/datapacks/my_leaf_rules/data/serene_better_winter/tags/blocks/`
+4. Create `deciduous_leaves.json` (blocks that should disappear):
+
+```json
+{
+  "replace": false,
+  "values": [
+    "minecraft:oak_leaves",
+    "minecraft:birch_leaves",
+    "dynamic_trees:oak_leaves"
+  ]
+}
+```
+
+5. Create `conifer_leaves.json` (blocks that should stay visible):
+
+```json
+{
+  "replace": false,
+  "values": [
+    "minecraft:spruce_leaves",
+    "dynamic_trees:spruce_leaves"
+  ]
+}
+```
+
+6. Reload datapacks in game:
+`/reload`
+
+Tips:
+
+- To force a specific leaf type to remain visible, add it to `conifer_leaves`.
+- To force a specific leaf type to disappear, add it to `deciduous_leaves`.
+
 ## Build
 
 ```powershell
