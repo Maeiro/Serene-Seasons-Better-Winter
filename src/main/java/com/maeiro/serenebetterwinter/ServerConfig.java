@@ -11,6 +11,8 @@ public final class ServerConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> LEAF_DROP_SUBSEASONS;
     public static final ForgeConfigSpec.BooleanValue BROADCAST_LEAF_DROP_SEASON_MESSAGE;
     public static final ForgeConfigSpec.ConfigValue<String> LEAF_DROP_SEASON_MESSAGE;
+    public static final ForgeConfigSpec.BooleanValue BROADCAST_LEAF_RETURN_SEASON_MESSAGE;
+    public static final ForgeConfigSpec.ConfigValue<String> LEAF_RETURN_SEASON_MESSAGE;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -33,10 +35,16 @@ public final class ServerConfig {
             );
         BROADCAST_LEAF_DROP_SEASON_MESSAGE = builder
             .comment("Broadcast a chat message when entering a configured leaf-drop sub-season.")
-            .define("broadcast_leaf_drop_season_message", false);
+            .define("broadcast_leaf_drop_season_message", true);
         LEAF_DROP_SEASON_MESSAGE = builder
             .comment("Message broadcast when entering a leaf-drop sub-season. Placeholders: %subseason%, %dimension%")
-            .define("leaf_drop_season_message", "&b[Serene Better Winter]&r Leaves are now hidden for %subseason%.");
+            .define("leaf_drop_season_message", "🌲🍁🍂 The air grows colder… leaves begin to fall. Winter is coming.");
+        BROADCAST_LEAF_RETURN_SEASON_MESSAGE = builder
+            .comment("Broadcast a chat message when leaving configured leaf-drop sub-seasons.")
+            .define("broadcast_leaf_return_season_message", true);
+        LEAF_RETURN_SEASON_MESSAGE = builder
+            .comment("Message broadcast when leaves return. Placeholders: %subseason%, %dimension%")
+            .define("leaf_return_season_message", "🌱🌳 The air turns warmer... leaves begin to grow back.");
         builder.pop();
         SPEC = builder.build();
     }

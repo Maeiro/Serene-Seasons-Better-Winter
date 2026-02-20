@@ -51,8 +51,10 @@ File: `world/serverconfig/serene_better_winter-server.toml`
 - `remove_light_blocking_from_hidden_blocks = true`
 - `force_relight_on_season_change = true`
 - `leaf_drop_subseasons = ["LATE_AUTUMN","EARLY_WINTER","MID_WINTER","LATE_WINTER"]`
-- `broadcast_leaf_drop_season_message = false`
-- `leaf_drop_season_message = "&b[Serene Better Winter]&r Leaves are now hidden for %subseason%."`
+- `broadcast_leaf_drop_season_message = true`
+- `leaf_drop_season_message = "🌲🍁🍂 The air grows colder… leaves begin to fall. Winter is coming."`
+- `broadcast_leaf_return_season_message = true`
+- `leaf_return_season_message = "🌱🌳 The air turns warmer... leaves begin to grow back."`
 
 `pass_through_hidden_blocks = true` allows entities to pass through hidden leaves and hidden snow layers above them.
 
@@ -62,6 +64,8 @@ File: `world/serverconfig/serene_better_winter-server.toml`
 
 - `%subseason%`
 - `%dimension%`
+
+`leaf_return_season_message` supports the same placeholders.
 
 ## Leaf Customization Tutorial (Per Tree Type)
 

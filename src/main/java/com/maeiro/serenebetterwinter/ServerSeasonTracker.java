@@ -25,7 +25,8 @@ public final class ServerSeasonTracker {
     private static final Map<ResourceKey<Level>, String> LAST_SUBSEASON_STATE = new HashMap<>();
     private static final Map<ResourceKey<Level>, Boolean> PENDING_RELIGHT = new HashMap<>();
     private static final int RELIGHT_CHUNK_LIMIT = 900;
-    private static final String DEFAULT_LEAF_DROP_MESSAGE = "&b[Serene Better Winter]&r Leaves are now hidden for %subseason%.";
+    private static final String DEFAULT_LEAF_DROP_MESSAGE = "🌲🍁🍂 The air grows colder… leaves begin to fall. Winter is coming.";
+    private static final String DEFAULT_LEAF_RETURN_MESSAGE = "🌱🌳 The air turns warmer... leaves begin to grow back.";
 
     private ServerSeasonTracker() {
     }
@@ -69,12 +70,12 @@ public final class ServerSeasonTracker {
             return;
         }
 
-        if (previousSubSeason != null
-            && currentSubSeason != null
-            && !previousSubSeason.equals(currentSubSeason)
-            && currentLeafless
-            && ServerConfig.BROADCAST_LEAF_DROP_SEASON_MESSAGE.get()) {
-            broadcastLeafDropSeasonMessage(level, currentSubSeason);
+        if (previousSubSeason != null && currentSubSeason != null && !previousSubSeason.equals(currentSubSeason)) {
+            if (currentLeafless && ServerConfig.BROADCAST_LEAF_DROP_SEASON_MESSAGE.get()) {
+                broadcastLeafDropSeasonMessage(level, currentSubSeason);
+            } else if (!currentLeafless && previousLeafless.booleanValue() && ServerConfig.BROADCAST_LEAF_RETURN_SEASON_MESSAGE.get()) {
+                broadcastLeafReturnSeasonMessage(level, currentSubSeason);
+            }
         }
 
         if (previousLeafless.booleanValue() == currentLeafless) {
@@ -182,13 +183,27 @@ public final class ServerSeasonTracker {
             messageTemplate = DEFAULT_LEAF_DROP_MESSAGE;
         }
 
-        String text = messageTemplate
-            .replace("%subseason%", subSeasonId)
-            .replace("%dimension%", level.dimension().location().toString());
-        Component message = Component.literal(text);
-
+        Component message = Component.literal(formatSeasonMessage(messageTemplate, subSeasonId, level));
         for (ServerPlayer player : level.players()) {
             player.sendSystemMessage(message);
         }
+    }
+
+    private static void broadcastLeafReturnSeasonMessage(ServerLevel level, String subSeasonId) {
+        String messageTemplate = ServerConfig.LEAF_RETURN_SEASON_MESSAGE.get();
+        if (messageTemplate == null || messageTemplate.isBlank()) {
+            messageTemplate = DEFAULT_LEAF_RETURN_MESSAGE;
+        }
+
+        Component message = Component.literal(formatSeasonMessage(messageTemplate, subSeasonId, level));
+        for (ServerPlayer player : level.players()) {
+            player.sendSystemMessage(message);
+        }
+    }
+
+    private static String formatSeasonMessage(String messageTemplate, String subSeasonId, ServerLevel level) {
+        return messageTemplate
+            .replace("%subseason%", subSeasonId)
+            .replace("%dimension%", level.dimension().location().toString());
     }
 }
