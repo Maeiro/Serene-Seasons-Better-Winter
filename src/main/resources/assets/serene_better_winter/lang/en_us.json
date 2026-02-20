@@ -1,3 +1,5 @@
 {
-  "modmenu.nameTranslation.serene_better_winter": "Serene Seasons Better Winter"
+  "modmenu.nameTranslation.serene_better_winter": "Serene Seasons Better Winter",
+  "serene_better_winter.default_leaf_drop_season_message": "🌲🍁🍂 The air grows colder… leaves begin to fall. Winter is coming.",
+  "serene_better_winter.default_leaf_return_season_message": "🌱🌳 The air turns warmer... leaves begin to grow back."
 }

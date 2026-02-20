@@ -50,8 +50,22 @@ File: `world/serverconfig/serene_better_winter-server.toml`
 - `pass_through_hidden_blocks = true`
 - `remove_light_blocking_from_hidden_blocks = true`
 - `force_relight_on_season_change = true`
+- `leaf_drop_subseasons = ["LATE_AUTUMN","EARLY_WINTER","MID_WINTER","LATE_WINTER"]`
+- `broadcast_leaf_drop_season_message = true`
+- `leaf_drop_season_message = "🌲🍁🍂 The air grows colder… leaves begin to fall. Winter is coming."`
+- `broadcast_leaf_return_season_message = true`
+- `leaf_return_season_message = "🌱🌳 The air turns warmer... leaves begin to grow back."`
 
 `pass_through_hidden_blocks = true` allows entities to pass through hidden leaves and hidden snow layers above them.
+
+`leaf_drop_subseasons` controls exactly which Serene Seasons sub-seasons activate the leaf-drop effect.
+
+`leaf_drop_season_message` supports placeholders:
+
+- `%subseason%`
+- `%dimension%`
+
+`leaf_return_season_message` supports the same placeholders.
 
 ## Leaf Customization Tutorial (Per Tree Type)
 
@@ -152,6 +166,3 @@ MIT (`LICENSE`)
 - Compatibility/behavior:
   - fix `remove_light_blocking_from_hidden_blocks` in non-Embeddium environments (vanilla/Forge renderer path).
   - improve light pass-through handling for hidden leaves in tall/very dense canopies when not using shaders (residual shadow still present even after ground-level leaf fixes).
-- Feature/config:
-  - add config to define which seasons/sub-seasons trigger leaf drop.
-  - add optional chat message when entering a leaf-drop season/sub-season (configurable).
