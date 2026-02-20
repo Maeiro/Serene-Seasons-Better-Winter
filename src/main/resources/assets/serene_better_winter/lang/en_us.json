@@ -1,3 +1,4 @@
 {
-  "modmenu.nameTranslation.serene_better_winter": "Serene Seasons Better Winter"
+  "modmenu.nameTranslation.serene_better_winter": "Serene Seasons Better Winter",
+  "serene_better_winter.default_leaf_drop_season_message": "[Serene Better Winter] Leaves are now hidden for %subseason%."
 }

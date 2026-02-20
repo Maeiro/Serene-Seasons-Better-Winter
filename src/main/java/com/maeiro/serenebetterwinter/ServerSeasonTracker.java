@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,8 +22,10 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = SereneBetterWinterMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class ServerSeasonTracker {
     private static final Map<ResourceKey<Level>, Boolean> LAST_LEAFLESS_STATE = new HashMap<>();
+    private static final Map<ResourceKey<Level>, String> LAST_SUBSEASON_STATE = new HashMap<>();
     private static final Map<ResourceKey<Level>, Boolean> PENDING_RELIGHT = new HashMap<>();
     private static final int RELIGHT_CHUNK_LIMIT = 900;
+    private static final String DEFAULT_LEAF_DROP_MESSAGE = "&b[Serene Better Winter]&r Leaves are now hidden for %subseason%.";
 
     private ServerSeasonTracker() {
     }
@@ -40,15 +43,18 @@ public final class ServerSeasonTracker {
             return;
         }
 
+        String currentSubSeason = SeasonStateResolver.getCurrentSubSeasonId(level);
         boolean currentLeafless = SeasonStateResolver.isLeaflessSeason(level);
         ResourceKey<Level> dimension = level.dimension();
+        String previousSubSeason = LAST_SUBSEASON_STATE.put(dimension, currentSubSeason);
         Boolean previousLeafless = LAST_LEAFLESS_STATE.put(dimension, currentLeafless);
         if (previousLeafless == null) {
             SereneBetterWinterMod.LOGGER.info(
-                "[{}] Server leafless season initial state in {}: {}",
+                "[{}] Server leafless season initial state in {}: {} (subseason={})",
                 SereneBetterWinterMod.MOD_ID,
                 dimension.location(),
-                currentLeafless
+                currentLeafless,
+                currentSubSeason
             );
             if (currentLeafless && ServerConfig.FORCE_RELIGHT_ON_SEASON_CHANGE.get() && ServerConfig.REMOVE_LIGHT_BLOCKING_FROM_HIDDEN_BLOCKS.get()) {
                 if (!forceRelightAroundPlayers(level, true)) {
@@ -62,6 +68,15 @@ public final class ServerSeasonTracker {
             }
             return;
         }
+
+        if (previousSubSeason != null
+            && currentSubSeason != null
+            && !previousSubSeason.equals(currentSubSeason)
+            && currentLeafless
+            && ServerConfig.BROADCAST_LEAF_DROP_SEASON_MESSAGE.get()) {
+            broadcastLeafDropSeasonMessage(level, currentSubSeason);
+        }
+
         if (previousLeafless.booleanValue() == currentLeafless) {
             Boolean pending = PENDING_RELIGHT.get(dimension);
             if (Boolean.TRUE.equals(pending) && currentLeafless) {
@@ -159,5 +174,21 @@ public final class ServerSeasonTracker {
             relightChecks
         );
         return true;
+    }
+
+    private static void broadcastLeafDropSeasonMessage(ServerLevel level, String subSeasonId) {
+        String messageTemplate = ServerConfig.LEAF_DROP_SEASON_MESSAGE.get();
+        if (messageTemplate == null || messageTemplate.isBlank()) {
+            messageTemplate = DEFAULT_LEAF_DROP_MESSAGE;
+        }
+
+        String text = messageTemplate
+            .replace("%subseason%", subSeasonId)
+            .replace("%dimension%", level.dimension().location().toString());
+        Component message = Component.literal(text);
+
+        for (ServerPlayer player : level.players()) {
+            player.sendSystemMessage(message);
+        }
     }
 }
