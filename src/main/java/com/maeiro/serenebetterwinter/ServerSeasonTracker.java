@@ -1,5 +1,6 @@
 package com.maeiro.serenebetterwinter;
 
+import com.maeiro.serenebetterwinter.network.SBWNetwork;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -16,8 +17,12 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 @Mod.EventBusSubscriber(modid = SereneBetterWinterMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class ServerSeasonTracker {
@@ -29,6 +34,24 @@ public final class ServerSeasonTracker {
     private static final String DEFAULT_LEAF_RETURN_MESSAGE = "🌱🌳 The air turns warmer... leaves begin to grow back.";
 
     private ServerSeasonTracker() {
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            SBWNetwork.syncToPlayer(player);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onServerConfigReload(ModConfigEvent.Reloading event) {
+        if (event.getConfig().getType() != ModConfig.Type.SERVER || event.getConfig().getSpec() != ServerConfig.SPEC) {
+            return;
+        }
+
+        if (ServerLifecycleHooks.getCurrentServer() != null) {
+            SBWNetwork.broadcast(ServerLifecycleHooks.getCurrentServer());
+        }
     }
 
     @SubscribeEvent

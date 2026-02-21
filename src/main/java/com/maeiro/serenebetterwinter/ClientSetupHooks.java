@@ -12,6 +12,6 @@ public final class ClientSetupHooks {
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(EmbeddiumCompat::tryRegisterSnowLayerFilter);
+        event.enqueueWork(EmbeddiumCompat::tryRegisterRenderFilters);
     }
 }

@@ -49,5 +49,6 @@ public final class ClientSeasonTracker {
     @SubscribeEvent
     public static void onLogout(ClientPlayerNetworkEvent.LoggingOut event) {
         leaflessSeasonActive = false;
+        AttachedHiddenLeafRules.resetToDefaults();
     }
 }

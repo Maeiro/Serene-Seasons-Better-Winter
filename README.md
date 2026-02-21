@@ -55,8 +55,10 @@ File: `world/serverconfig/serene_better_winter-server.toml`
 - `leaf_drop_season_message = "🌲🍁🍂 The air grows colder… leaves begin to fall. Winter is coming."`
 - `broadcast_leaf_return_season_message = true`
 - `leaf_return_season_message = "🌱🌳 The air turns warmer... leaves begin to grow back."`
+- `hide_blocks_attached_to_hidden_leaves = true`
 
 `pass_through_hidden_blocks = true` allows entities to pass through hidden leaves and hidden snow layers above them.
+`hide_blocks_attached_to_hidden_leaves = true` hides small hanging blocks directly below hidden leaves (for example apples/cocoons).
 
 `leaf_drop_subseasons` controls exactly which Serene Seasons sub-seasons activate the leaf-drop effect.
 
@@ -77,10 +79,15 @@ Tags used by this mod:
   - leaves in this tag are hidden during configured leafless seasons.
 - `serene_better_winter:conifer_leaves`:
   - leaves in this tag are kept visible.
+- `serene_better_winter:always_hide_when_attached_to_hidden_leaves`:
+  - force-hide blocks hanging below hidden leaves.
+- `serene_better_winter:never_hide_when_attached_to_hidden_leaves`:
+  - never hide those blocks, even if hanging below hidden leaves.
 
 Priority rule:
 
 - `conifer_leaves` wins over `deciduous_leaves` if a block is present in both.
+- `never_hide_when_attached_to_hidden_leaves` wins over `always_hide_when_attached_to_hidden_leaves`.
 
 Step-by-step:
 

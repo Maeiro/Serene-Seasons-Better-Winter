@@ -1,6 +1,7 @@
 package com.maeiro.serenebetterwinter;
 
 import com.mojang.logging.LogUtils;
+import com.maeiro.serenebetterwinter.network.SBWNetwork;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -15,6 +16,7 @@ public final class SereneBetterWinterMod {
     public SereneBetterWinterMod() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
+        SBWNetwork.init();
         LOGGER.info("[{}] Loaded. Client config enabled default={}", MOD_ID, ClientConfig.ENABLED.getDefault());
     }
 }

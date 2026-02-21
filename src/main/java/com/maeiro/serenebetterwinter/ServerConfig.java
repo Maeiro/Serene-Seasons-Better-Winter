@@ -13,6 +13,7 @@ public final class ServerConfig {
     public static final ForgeConfigSpec.ConfigValue<String> LEAF_DROP_SEASON_MESSAGE;
     public static final ForgeConfigSpec.BooleanValue BROADCAST_LEAF_RETURN_SEASON_MESSAGE;
     public static final ForgeConfigSpec.ConfigValue<String> LEAF_RETURN_SEASON_MESSAGE;
+    public static final ForgeConfigSpec.BooleanValue HIDE_BLOCKS_ATTACHED_TO_HIDDEN_LEAVES;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -45,6 +46,9 @@ public final class ServerConfig {
         LEAF_RETURN_SEASON_MESSAGE = builder
             .comment("Message broadcast when leaves return. Placeholders: %subseason%, %dimension%")
             .define("leaf_return_season_message", "🌱🌳 The air turns warmer... leaves begin to grow back.");
+        HIDE_BLOCKS_ATTACHED_TO_HIDDEN_LEAVES = builder
+            .comment("Hide render for blocks hanging below leaves hidden by this mod.")
+            .define("hide_blocks_attached_to_hidden_leaves", true);
         builder.pop();
         SPEC = builder.build();
     }
@@ -52,3 +56,4 @@ public final class ServerConfig {
     private ServerConfig() {
     }
 }
+

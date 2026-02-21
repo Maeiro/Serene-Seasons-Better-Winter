@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fml.ModList;
 
@@ -21,7 +20,7 @@ public final class EmbeddiumCompat {
     private EmbeddiumCompat() {
     }
 
-    public static void tryRegisterSnowLayerFilter() {
+    public static void tryRegisterRenderFilters() {
         if (registered || !ModList.get().isLoaded(EMBEDDIUM_MOD_ID)) {
             return;
         }
@@ -43,10 +42,6 @@ public final class EmbeddiumCompat {
                         return passResult;
                     }
 
-                    if (!ClientConfig.ENABLED.get() || !ClientConfig.HIDE_SNOW_ABOVE_HIDDEN_LEAVES.get() || !ClientSeasonTracker.isLeaflessSeasonActive()) {
-                        return passResult;
-                    }
-
                     Object context = args[0];
                     if (context == null) {
                         return passResult;
@@ -58,13 +53,13 @@ public final class EmbeddiumCompat {
                     }
 
                     BlockState state = (BlockState) accessors.state().invoke(context);
-                    if (state == null || !state.is(Blocks.SNOW)) {
+                    if (state == null) {
                         return passResult;
                     }
 
                     BlockPos pos = (BlockPos) accessors.pos().invoke(context);
                     BlockAndTintGetter level = (BlockAndTintGetter) accessors.localSlice().invoke(context);
-                    if (SnowRenderRules.shouldHideSnowLayerAboveHiddenLeaves(level, pos, state)) {
+                    if (ClientVisualRules.shouldHideBlockVisual(level, pos, state)) {
                         return overrideResult;
                     }
 
@@ -91,7 +86,7 @@ public final class EmbeddiumCompat {
             Object registry = registryClass.getMethod("instance").invoke(null);
             registryClass.getMethod("registerRenderPopulator", populatorInterface).invoke(registry, populatorProxy);
             registered = true;
-            SereneBetterWinterMod.LOGGER.info("[{}] Registered Embeddium snow-layer filter via BlockRendererRegistry API.", SereneBetterWinterMod.MOD_ID);
+            SereneBetterWinterMod.LOGGER.info("[{}] Registered Embeddium render filters via BlockRendererRegistry API.", SereneBetterWinterMod.MOD_ID);
         } catch (Throwable t) {
             if (!registrationFailedLogged) {
                 registrationFailedLogged = true;

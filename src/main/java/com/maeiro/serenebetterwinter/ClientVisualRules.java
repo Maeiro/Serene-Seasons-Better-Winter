@@ -18,7 +18,10 @@ public final class ClientVisualRules {
         if (LeafTargeting.shouldHide(state)) {
             return true;
         }
-        return SnowRenderRules.shouldHideSnowLayerAboveHiddenLeaves(level, pos, state);
+        if (SnowRenderRules.shouldHideSnowLayerAboveHiddenLeaves(level, pos, state)) {
+            return true;
+        }
+        return AttachedHiddenLeafRules.shouldHideAttachedBlock(level, pos, state);
     }
 }
 

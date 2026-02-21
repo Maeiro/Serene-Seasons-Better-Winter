@@ -1,6 +1,6 @@
 package com.maeiro.serenebetterwinter.mixin.client;
 
-import com.maeiro.serenebetterwinter.SnowRenderRules;
+import com.maeiro.serenebetterwinter.ClientVisualRules;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
@@ -34,7 +34,7 @@ public abstract class VanillaModelBlockRendererMixin {
         int packedOverlay,
         CallbackInfo ci
     ) {
-        if (SnowRenderRules.shouldHideSnowLayerAboveHiddenLeaves(level, pos, state)) {
+        if (ClientVisualRules.shouldHideBlockVisual(level, pos, state)) {
             ci.cancel();
         }
     }
@@ -57,7 +57,7 @@ public abstract class VanillaModelBlockRendererMixin {
         int packedOverlay,
         CallbackInfo ci
     ) {
-        if (SnowRenderRules.shouldHideSnowLayerAboveHiddenLeaves(level, pos, state)) {
+        if (ClientVisualRules.shouldHideBlockVisual(level, pos, state)) {
             ci.cancel();
         }
     }

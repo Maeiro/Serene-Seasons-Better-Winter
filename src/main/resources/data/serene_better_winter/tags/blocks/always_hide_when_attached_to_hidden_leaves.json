@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "dynamictrees:apple",
+      "required": false
+    },
+    {
+      "id": "crittersandcompanions:silk_cocoon",
+      "required": false
+    },
+    {
+      "id": "crittersandcompanions:silk_cotton",
+      "required": false
+    }
+  ]
+}
