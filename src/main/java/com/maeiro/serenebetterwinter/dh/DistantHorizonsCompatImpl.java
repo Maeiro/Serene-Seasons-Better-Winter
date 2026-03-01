@@ -28,7 +28,9 @@ import net.minecraft.world.level.chunk.LevelChunk;
 
 public final class DistantHorizonsCompatImpl {
     private static final LeafChunkProcessingEvent CHUNK_PROCESSING_EVENT = new LeafChunkProcessingEvent();
-    private static final boolean ENABLE_CHUNK_PROCESSING_OVERRIDE_FALLBACK = false;
+    private static final boolean ENABLE_CHUNK_PROCESSING_OVERRIDE_FALLBACK = Boolean.getBoolean(
+        "serene_better_winter.dh.chunk_processing_fallback"
+    );
     private static volatile boolean initialized = false;
     private static volatile boolean compatReady = false;
     private static volatile boolean chunkProcessingFallbackRegistered = false;
