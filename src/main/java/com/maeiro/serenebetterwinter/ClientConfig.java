@@ -34,7 +34,7 @@ public final class ClientConfig {
             .comment(
                 "EXPERIMENTAL: enable Serene Better Winter integration with Distant Horizons.",
                 "May cause unexpected LOD behavior on some modpacks/setups.",
-                "Disable if you notice stale/flickering/holey distant chunks."
+                "Disable if you notice stale/flickering/holey distant chunks or any other issues you suspect may be related to this integration."
             )
             .define("enable_experimental_dh_integration", false);
         ENABLE_DH_LOD_LEAF_HIDING = builder
