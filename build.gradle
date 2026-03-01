@@ -59,6 +59,8 @@ dependencies {
 
     runtimeOnly fg.deobf("curse.maven:serene-seasons-291874:6398227")
     runtimeOnly fg.deobf("curse.maven:glitchcore-955399:5787839")
+    compileOnly fg.deobf("curse.maven:distant-horizons-a-level-of-detail-mod-508933:7375280")
+    runtimeOnly fg.deobf("curse.maven:distant-horizons-a-level-of-detail-mod-508933:7375280")
 }
 
 mixin {

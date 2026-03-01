@@ -10,6 +10,7 @@
   ],
   "client": [
     "client.ClientBlockStateRenderShapeMixin",
+    "client.DistantHorizonsFullDataTransformerMixin",
     "client.EmbeddiumLightDataAccessMixin",
     "client.ModelBlockRendererMixin",
     "client.VanillaModelBlockRendererMixin"

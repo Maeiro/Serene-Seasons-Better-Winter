@@ -23,6 +23,7 @@ deciduous leaves disappear in late autumn/winter, while conifer and jungle leave
 - Optional integrations:
   - `dynamic_trees`
   - Embeddium (specialized renderer/light handling path)
+  - Distant Horizons (optional LOD leaf hiding + refresh path)
 
 ## Installation
 
@@ -40,8 +41,14 @@ File: `config/serene_better_winter-client.toml`
 - `enabled = true`
 - `hide_snow_above_hidden_leaves = true`
 - `hide_outline_for_hidden_blocks = true`
+- `enable_dh_lod_leaf_hiding = true`
+- `dh_auto_refresh_on_season_toggle = true`
+- `dh_refresh_radius_chunks = 8`
+- `dh_refresh_chunk_cap = 1024`
+- `dh_refresh_delay_ticks = 20`
 
 If `enabled = false`, the mod does not hide leaves or related snow visuals.
+If Distant Horizons is not installed, DH-specific client options are ignored.
 
 ### Server
 
