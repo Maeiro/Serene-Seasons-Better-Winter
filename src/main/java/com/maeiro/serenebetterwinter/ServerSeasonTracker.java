@@ -27,7 +27,6 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 @Mod.EventBusSubscriber(modid = SereneBetterWinterMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class ServerSeasonTracker {
     private static final Map<ResourceKey<Level>, Boolean> LAST_LEAFLESS_STATE = new HashMap<>();
-    private static final Map<ResourceKey<Level>, String> LAST_SUBSEASON_STATE = new HashMap<>();
     private static final Map<ResourceKey<Level>, Boolean> PENDING_RELIGHT = new HashMap<>();
     private static final int RELIGHT_CHUNK_LIMIT = 900;
     private static final String DEFAULT_LEAF_DROP_MESSAGE = "🌲🍁🍂 The air grows colder… leaves begin to fall. Winter is coming.";
@@ -70,7 +69,6 @@ public final class ServerSeasonTracker {
         String currentSubSeason = SeasonStateResolver.getCurrentSubSeasonId(level);
         boolean currentLeafless = SeasonStateResolver.isLeaflessSeason(level);
         ResourceKey<Level> dimension = level.dimension();
-        String previousSubSeason = LAST_SUBSEASON_STATE.put(dimension, currentSubSeason);
         Boolean previousLeafless = LAST_LEAFLESS_STATE.put(dimension, currentLeafless);
         if (previousLeafless == null) {
             SereneBetterWinterMod.LOGGER.info(
@@ -93,12 +91,10 @@ public final class ServerSeasonTracker {
             return;
         }
 
-        if (previousSubSeason != null && currentSubSeason != null && !previousSubSeason.equals(currentSubSeason)) {
-            if (currentLeafless && ServerConfig.BROADCAST_LEAF_DROP_SEASON_MESSAGE.get()) {
-                broadcastLeafDropSeasonMessage(level, currentSubSeason);
-            } else if (!currentLeafless && previousLeafless.booleanValue() && ServerConfig.BROADCAST_LEAF_RETURN_SEASON_MESSAGE.get()) {
-                broadcastLeafReturnSeasonMessage(level, currentSubSeason);
-            }
+        if (!previousLeafless.booleanValue() && currentLeafless && ServerConfig.BROADCAST_LEAF_DROP_SEASON_MESSAGE.get()) {
+            broadcastLeafDropSeasonMessage(level, currentSubSeason);
+        } else if (previousLeafless.booleanValue() && !currentLeafless && ServerConfig.BROADCAST_LEAF_RETURN_SEASON_MESSAGE.get()) {
+            broadcastLeafReturnSeasonMessage(level, currentSubSeason);
         }
 
         if (previousLeafless.booleanValue() == currentLeafless) {
@@ -225,8 +221,9 @@ public final class ServerSeasonTracker {
     }
 
     private static String formatSeasonMessage(String messageTemplate, String subSeasonId, ServerLevel level) {
+        String safeSubSeasonId = subSeasonId == null || subSeasonId.isBlank() ? "UNKNOWN" : subSeasonId;
         return messageTemplate
-            .replace("%subseason%", subSeasonId)
+            .replace("%subseason%", safeSubSeasonId)
             .replace("%dimension%", level.dimension().location().toString());
     }
 }
