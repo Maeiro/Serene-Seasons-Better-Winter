@@ -1,5 +1,6 @@
 package com.maeiro.serenebetterwinter.dh;
 
+import com.maeiro.serenebetterwinter.ClientConfig;
 import com.maeiro.serenebetterwinter.SereneBetterWinterMod;
 import java.lang.reflect.Method;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -15,6 +16,7 @@ public final class DistantHorizonsCompatBootstrap {
     private static final long RETRY_DELAY_MS = 3000L;
     private static int retryLogCount = 0;
     private static final int RETRY_LOG_LIMIT = 10;
+    private static boolean experimentalWarnLogged = false;
     private static volatile Method onLeaflessSeasonStateChangedMethod;
     private static volatile Method onClientTickMethod;
     private static volatile Method onClientLogoutMethod;
@@ -38,6 +40,9 @@ public final class DistantHorizonsCompatBootstrap {
         if (!ModList.get().isLoaded(DH_MOD_ID)) {
             return;
         }
+        if (!ClientConfig.isDhIntegrationEnabled()) {
+            return;
+        }
 
         try {
             Class<?> impl = Class.forName(IMPL_CLASS_NAME);
@@ -50,6 +55,13 @@ public final class DistantHorizonsCompatBootstrap {
             active = true;
             retryAfterMs = 0L;
             SereneBetterWinterMod.LOGGER.info("[{}] Distant Horizons compatibility initialized.", SereneBetterWinterMod.MOD_ID);
+            if (!experimentalWarnLogged) {
+                experimentalWarnLogged = true;
+                SereneBetterWinterMod.LOGGER.warn(
+                    "[{}] Distant Horizons integration is EXPERIMENTAL and may cause unexpected LOD behavior on some setups.",
+                    SereneBetterWinterMod.MOD_ID
+                );
+            }
         } catch (Throwable t) {
             initAttempted = false;
             retryAfterMs = System.currentTimeMillis() + RETRY_DELAY_MS;

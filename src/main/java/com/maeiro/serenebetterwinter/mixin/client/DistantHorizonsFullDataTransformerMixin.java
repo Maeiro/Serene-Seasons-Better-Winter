@@ -49,7 +49,7 @@ public abstract class DistantHorizonsFullDataTransformerMixin {
         if (blockStateWrapper == null) {
             return null;
         }
-        if (!ClientConfig.ENABLED.get() || !ClientConfig.ENABLE_DH_LOD_LEAF_HIDING.get()) {
+        if (!ClientConfig.isDhIntegrationEnabled()) {
             return blockStateWrapper;
         }
         if (!ClientSeasonTracker.isLeaflessSeasonActive()) {
