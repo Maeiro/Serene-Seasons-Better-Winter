@@ -11,7 +11,6 @@ public final class DistantHorizonsCompatBootstrap {
     private static final String IMPL_CLASS_NAME = "com.maeiro.serenebetterwinter.dh.DistantHorizonsCompatImpl";
     private static volatile boolean initAttempted = false;
     private static volatile boolean active = false;
-    private static volatile boolean loadFailureLogged = false;
     private static volatile long retryAfterMs = 0L;
     private static final long RETRY_DELAY_MS = 3000L;
     private static int retryLogCount = 0;
@@ -32,17 +31,16 @@ public final class DistantHorizonsCompatBootstrap {
         if (retryAfterMs > now) {
             return;
         }
-        if (initAttempted) {
-            return;
-        }
-        initAttempted = true;
-
         if (!ModList.get().isLoaded(DH_MOD_ID)) {
             return;
         }
         if (!ClientConfig.isDhIntegrationEnabled()) {
             return;
         }
+        if (initAttempted) {
+            return;
+        }
+        initAttempted = true;
 
         try {
             Class<?> impl = Class.forName(IMPL_CLASS_NAME);
@@ -68,7 +66,6 @@ public final class DistantHorizonsCompatBootstrap {
             active = false;
             if (retryLogCount < RETRY_LOG_LIMIT) {
                 retryLogCount++;
-                loadFailureLogged = true;
                 SereneBetterWinterMod.LOGGER.warn("[{}] Failed to initialize Distant Horizons compatibility. Retrying soon.", SereneBetterWinterMod.MOD_ID, t);
             }
         }
@@ -99,7 +96,6 @@ public final class DistantHorizonsCompatBootstrap {
             retryAfterMs = System.currentTimeMillis() + RETRY_DELAY_MS;
             if (retryLogCount < RETRY_LOG_LIMIT) {
                 retryLogCount++;
-                loadFailureLogged = true;
                 SereneBetterWinterMod.LOGGER.warn("[{}] Distant Horizons compatibility hit a runtime failure and will retry.", SereneBetterWinterMod.MOD_ID, t);
             }
         }

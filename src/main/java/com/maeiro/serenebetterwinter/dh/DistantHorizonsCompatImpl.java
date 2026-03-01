@@ -579,15 +579,11 @@ public final class DistantHorizonsCompatImpl {
                         break;
                     }
 
-                    boolean canQueue = true;
                     if (fullDataProviderCanQueueRetrievalNowMethod != null) {
                         Object canQueueObj = fullDataProviderCanQueueRetrievalNowMethod.invoke(fullDataProvider);
                         if (canQueueObj instanceof Boolean canQueueBool && !canQueueBool) {
                             break;
                         }
-                    }
-                    if (!canQueue) {
-                        break;
                     }
 
                     int chunkX = ChunkPos.getX(chunkKey);
