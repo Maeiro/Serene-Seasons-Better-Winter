@@ -170,7 +170,7 @@ Artifact output:
 
 ## License
 
-MIT (`LICENSE`)
+GNU GPL v3.0 (`LICENSE`)
 
 ## TODO
 
